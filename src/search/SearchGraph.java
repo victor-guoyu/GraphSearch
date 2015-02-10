@@ -147,10 +147,10 @@ public class SearchGraph {
         for (int i = 0; i < matrix.length; i++)
             if (matrix[path.get(0)][i] > 0 && !path.contains(i)) {
                 @SuppressWarnings("unchecked")
-                ArrayList<Integer> temp = (ArrayList<Integer>) path.clone();
-                temp.add(0, i);
-                totalNumber++;
-                newVisitorQueue.add(temp);
+                ArrayList<Integer> tempPath = (ArrayList<Integer>) path.clone();
+                tempPath.add(0, i);
+                totalNumber += Iterables.size(tempPath);
+                newVisitorQueue.add(tempPath);
             }
         return newVisitorQueue;
     }
