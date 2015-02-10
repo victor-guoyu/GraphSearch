@@ -11,9 +11,12 @@ import com.google.common.collect.Lists;
 
 public class SearchGraph {
     private int[][] matrix;
+    private int totalNumber;
+    private int maxNumberNode;
 
     public SearchGraph() {
         matrix = Graph.getInstance().getAdjMatrix();
+        totalNumber = maxNumberNode = 0;
     }
 
     public void run() {
@@ -33,9 +36,10 @@ public class SearchGraph {
 
         start.add(sourceCity.getValue());
         visitorQueue.add(start);
+        totalNumber++;// Count the creation of start node
 
         ArrayList<Integer> path = null;
-
+        
         switch (algorithm) {
             case BFS:
                 path = breadFirstSearch(visitorQueue, destinationCity.getValue());
@@ -64,6 +68,8 @@ public class SearchGraph {
         } else {
             ArrayList<ArrayList<Integer>> expandedVisitorQueue = expandNode(visitorQueue.get(0));
             visitorQueue.remove(0);
+            int currentNodeNumber = countTotalNode(visitorQueue);
+            if (currentNodeNumber > maxNumberNode)  maxNumberNode = currentNodeNumber;
             return breadFirstSearch(Lists.
                     newArrayList(Iterables.concat(visitorQueue, expandedVisitorQueue)), destination);
         }
@@ -78,6 +84,8 @@ public class SearchGraph {
         } else {
             ArrayList<ArrayList<Integer>> expandedVisitorQueue = expandNode(visitorQueue.get(0));
             visitorQueue.remove(0);
+            int currentNodeNumber = countTotalNode(visitorQueue);
+            if (currentNodeNumber > maxNumberNode)  maxNumberNode = currentNodeNumber;
             return depthFirstSearch(Lists.
                     newArrayList(Iterables.concat(expandedVisitorQueue, visitorQueue)), destination);
         }
@@ -95,6 +103,8 @@ public class SearchGraph {
             ArrayList<ArrayList<Integer>> newVisitorQueue = 
                     Lists.newArrayList(Iterables.concat(visitorQueue, expandedVisitorQueue));
             sort(newVisitorQueue);
+            int currentNodeNumber = countTotalNode(visitorQueue);
+            if (currentNodeNumber > maxNumberNode)  maxNumberNode = currentNodeNumber;
             return uniformCostSearch(newVisitorQueue, destination);
         }
     }
@@ -113,8 +123,18 @@ public class SearchGraph {
                 .join(
                         Lists.reverse(Lists.newArrayList(intToName)
                 )));
+        System.out.println("Total Node created: "+ totalNumber);
+        System.out.println("Maximum number of Node in memory: "+ maxNumberNode);
     }
-
+    
+    private int countTotalNode(ArrayList<ArrayList<Integer>> visitorQueue) {
+        int result = 0;
+        for (ArrayList<Integer> path: visitorQueue) {
+            result += Iterables.size(path);
+        }
+        return result;
+    }
+    
     private int pathCost(ArrayList<Integer> path) {
         int cost = 0;
         for (int i = 0; i < path.size() - 1; i++)
@@ -129,6 +149,7 @@ public class SearchGraph {
                 @SuppressWarnings("unchecked")
                 ArrayList<Integer> temp = (ArrayList<Integer>) path.clone();
                 temp.add(0, i);
+                totalNumber++;
                 newVisitorQueue.add(temp);
             }
         return newVisitorQueue;
