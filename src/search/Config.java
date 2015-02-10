@@ -3,6 +3,8 @@ package search;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import com.google.common.base.Optional;
+
 public enum Config {
     INSTANCE;
 
@@ -21,15 +23,37 @@ public enum Config {
         }
     }
     
-    public Algorithms getAlgorithm() {
-        return Algorithms.valueOf(properties.getProperty(ALGORITHM).toUpperCase());
+    public Optional<Algorithms> getAlgorithm() {
+        Algorithms algorithm = Algorithms.valueOf(properties.getProperty(ALGORITHM).toUpperCase());
+        if (algorithm == null) {
+            System.out.println("The algorithm specified is not reconginzed, "
+                    + "using BFS for the deafule algorithm");
+            return Optional.absent();
+        } else {
+            return Optional.of(algorithm);
+        }
     }
     
-    public Cities getDestinationCity() {
-        return Cities.nameToCity.get(properties.getProperty(DESTINATION_CITY).toUpperCase());
+    public Optional<Cities> getDestinationCity() {
+        Cities destination = Cities.nameToCity
+                .get(properties.getProperty(DESTINATION_CITY).toUpperCase());
+        if (destination == null) {
+            System.out.println("The destination city specified is not in the graph, "
+                    + "using default destination city: Eforie instead");
+            return Optional.absent();
+        } else {
+            return Optional.of(destination);
+        }
     }
     
-    public Cities getSourceCity() {
-        return Cities.nameToCity.get(properties.getProperty(SOURCE_CITY).toUpperCase());
+    public Optional<Cities> getSourceCity() {
+        Cities source = Cities.nameToCity.get(properties.getProperty(SOURCE_CITY).toUpperCase());
+        if (source == null) {
+            System.out.println("The source city specified is not in the graph, "
+                    + "using default source city: Oradea instead");
+            return Optional.absent();
+        } else {
+            return Optional.of(source);
+        }
     }
 }

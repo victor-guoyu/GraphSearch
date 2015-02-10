@@ -24,14 +24,17 @@ public enum Cities {
     Vaslui(17),
     Hirsova(18),
     Eforie(19);
-    
+
     private final int value;
     static final HashMap<String, Cities> nameToCity;
+    static final HashMap<Integer, String> idToCityName;
 
     static {
         nameToCity = new HashMap<String, Cities>();
+        idToCityName = new HashMap<Integer, String>();
         for (Cities city: EnumSet.allOf(Cities.class)) {
             nameToCity.put(city.name().toUpperCase(), city);
+            idToCityName.put(city.getValue(), city.name());
         }
     }
 
