@@ -8,7 +8,7 @@ The program can be configured using the property file located under
 
 You will be providing three options, here is a sample property config
 
-# You can choose from: BFS, DFS, UCS
+# You can choose from: BFS (Breadth-first search), DFS(Depth-first search), UCS(uniform cost search)
 algorithm= UCS
 
 #Full Name of the cities, case insensitive
